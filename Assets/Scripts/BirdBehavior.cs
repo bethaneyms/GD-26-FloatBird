@@ -14,7 +14,7 @@ public class BirdBehavior : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
         {
-            rb.velocity = Vector2.up * jumpForce;
+            rb.linearVelocity = Vector2.up * jumpForce;
         }
     }
 }
