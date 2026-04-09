@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class PipeMover : MonoBehaviour
 {
-    public float speed = 3f;
+    public static float moveSpeed = 3f;
 
     void Update()
     {
-        transform.position += Vector3.left * speed * Time.deltaTime;
+        transform.position += Vector3.left * moveSpeed * Time.deltaTime;
 
         if (transform.position.x < -15f)
         {
