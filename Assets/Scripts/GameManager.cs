@@ -1,16 +1,54 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public static GameManager instance;
+
+    public TextMeshProUGUI scoreText;
+
+    public int score = 0;
+    public bool gameStarted = false;
+    public bool gameOver = false;
+
+    private void Awake()
     {
-        
+        instance = this;
     }
 
-    // Update is called once per frame
-    void Update()
+    void Start()
     {
-        
+        score = 0;
+        scoreText.text = "0";
+        Time.timeScale = 1f;
+    }
+
+    public void StartGame()
+    {
+        gameStarted = true;
+    }
+
+    public void AddScore()
+    {
+        if (gameOver) return;
+
+        score++;
+        scoreText.text = score.ToString(); 
+    }
+
+    public void EndGame()
+    {
+        if (gameOver) return;
+
+        gameOver = true;
+        Debug.Log("Game Over");
+
+        Invoke(nameof(RestartGame), 1.5f);
+    }
+
+    void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
