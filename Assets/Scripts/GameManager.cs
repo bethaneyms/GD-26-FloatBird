@@ -7,10 +7,17 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     public TextMeshProUGUI scoreText;
+    public GameObject startText;
+
+    public GameObject gameOverPanel;
+    public TextMeshProUGUI finalScoreText;
+    public TextMeshProUGUI highScoreText;
 
     public int score = 0;
     public bool gameStarted = false;
     public bool gameOver = false;
+
+    public float pipeSpeed = 3f;
 
     private void Awake()
     {
@@ -20,13 +27,38 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         score = 0;
-        scoreText.text = "0";
+        gameStarted = false;
+        gameOver = false;
+        pipeSpeed = 3f;
+
+        if (scoreText != null)
+        {
+            scoreText.text = "0";
+        }
+
+        if (startText != null)
+        {
+            startText.SetActive(true);
+        }
+
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(false);
+        }
+
         Time.timeScale = 1f;
     }
 
     public void StartGame()
     {
+        if (gameOver) return;
+
         gameStarted = true;
+
+        if (startText != null)
+        {
+            startText.SetActive(false);
+        }
     }
 
     public void AddScore()
@@ -34,7 +66,18 @@ public class GameManager : MonoBehaviour
         if (gameOver) return;
 
         score++;
-        scoreText.text = score.ToString(); 
+        Debug.Log("Score: " + score);
+
+        if (scoreText != null)
+        {
+            scoreText.text = score.ToString();
+        }
+
+        if (score % 10 == 0)
+        {
+            pipeSpeed += 0.5f;
+            Debug.Log("Pipe speed increased to: " + pipeSpeed);
+        }
     }
 
     public void EndGame()
@@ -42,13 +85,41 @@ public class GameManager : MonoBehaviour
         if (gameOver) return;
 
         gameOver = true;
-        Debug.Log("Game Over");
 
-        Invoke(nameof(RestartGame), 1.5f);
+        if (startText != null)
+        {
+            startText.SetActive(false);
+        }
+
+        int highScore = PlayerPrefs.GetInt("HighScore", 0);
+
+        if (score > highScore)
+        {
+            highScore = score;
+            PlayerPrefs.SetInt("HighScore", highScore);
+        }
+
+        if (finalScoreText != null)
+        {
+            finalScoreText.text = "Score: " + score;
+        }
+
+        if (highScoreText != null)
+        {
+            highScoreText.text = "Best: " + highScore;
+        }
+
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(true);
+        }
+
+        Time.timeScale = 0f;
     }
 
-    void RestartGame()
+    public void RestartGame()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
