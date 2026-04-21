@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -31,20 +32,9 @@ public class GameManager : MonoBehaviour
         gameOver = false;
         pipeSpeed = 3f;
 
-        if (scoreText != null)
-        {
-            scoreText.text = "0";
-        }
-
-        if (startText != null)
-        {
-            startText.SetActive(true);
-        }
-
-        if (gameOverPanel != null)
-        {
-            gameOverPanel.SetActive(false);
-        }
+        if (scoreText != null) scoreText.text = "0";
+        if (startText != null) startText.SetActive(true);
+        if (gameOverPanel != null) gameOverPanel.SetActive(false);
 
         Time.timeScale = 1f;
     }
@@ -66,7 +56,6 @@ public class GameManager : MonoBehaviour
         if (gameOver) return;
 
         score++;
-        Debug.Log("Score: " + score);
 
         if (scoreText != null)
         {
@@ -76,7 +65,6 @@ public class GameManager : MonoBehaviour
         if (score % 10 == 0)
         {
             pipeSpeed += 0.5f;
-            Debug.Log("Pipe speed increased to: " + pipeSpeed);
         }
     }
 
@@ -114,6 +102,12 @@ public class GameManager : MonoBehaviour
             gameOverPanel.SetActive(true);
         }
 
+        StartCoroutine(PauseAfterDelay());
+    }
+
+    private IEnumerator PauseAfterDelay()
+    {
+        yield return new WaitForSecondsRealtime(0.15f);
         Time.timeScale = 0f;
     }
 

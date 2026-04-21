@@ -30,29 +30,23 @@ public class BirdBehavior : MonoBehaviour
 
             rb.linearVelocity = Vector2.up * jumpForce;
 
-            if (flapSound != null)
+            if (flapSound != null && flapSound.clip != null)
             {
                 flapSound.Play();
+                Debug.Log("Flap sound played");
             }
         }
 
         if (transform.position.y < -6f)
         {
-            if (hitSound != null && !hitSound.isPlaying)
-            {
-                hitSound.Play();
-            }
-
-            GameManager.instance.EndGame();
+            Die();
         }
     }
 
     void FixedUpdate()
     {
         if (rb == null) return;
-
-        if (GameManager.instance != null && GameManager.instance.gameOver)
-            return;
+        if (GameManager.instance != null && GameManager.instance.gameOver) return;
 
         if (rb.linearVelocity.y > 0)
         {
@@ -70,10 +64,18 @@ public class BirdBehavior : MonoBehaviour
         if (GameManager.instance.gameOver) return;
 
         Debug.Log("Collided with: " + collision.gameObject.name);
+        Die();
+    }
 
-        if (hitSound != null)
+    void Die()
+    {
+        if (GameManager.instance == null) return;
+        if (GameManager.instance.gameOver) return;
+
+        if (hitSound != null && hitSound.clip != null)
         {
             hitSound.Play();
+            Debug.Log("Hit sound played");
         }
 
         GameManager.instance.EndGame();
